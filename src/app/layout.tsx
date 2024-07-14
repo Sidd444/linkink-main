@@ -4,7 +4,7 @@ import "./globals.css";
 import { AuroraBackground } from "@/components/Aurorabackground";
 import Layout from "@/components/Layout";
 import Cursor from "@/components/Cursor";
-import { SessionProvider} from 'next-auth/react';
+import { Providers } from "@/components/Providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,11 +23,13 @@ export default function RootLayout({
       <body className={inter.className}>
         {/* <Cursor /> */}
         {/* <AuroraBackground> */}
-        <Layout>
-          <SessionProvider>
+        
+          <Providers>
+          <Layout>
           {children}
-          </SessionProvider>          
-        </Layout>
+          </Layout>
+          </Providers>          
+        
         {/* </AuroraBackground> */}
       </body>
     </html>

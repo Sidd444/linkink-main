@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { HoveredLink, Menu, MenuItem, ProductItem } from "./ui/navbar-menu";
 import { cn } from "@/utils/cn";
+import Link from "../../node_modules/next/link";
 
 export function NavbarDemo() {
   return (
@@ -72,8 +73,8 @@ function Navbar({ className }: { className?: string }) {
               </button>
             </>
           ) : (
-            <button onClick={() => signIn()} className="text-sm text-blue-500">
-              Login
+            <button className="text-sm text-blue-500">
+              <Link href="/login">Sign in</Link>
             </button>
           )}
         </div>
