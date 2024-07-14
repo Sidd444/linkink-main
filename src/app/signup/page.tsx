@@ -73,7 +73,7 @@ const SignUp = () => {
 
           <div className="flex items-center justify-between">
             <div className="text-sm">
-              <div className="font-medium text-indigo-400 hover:text-indigo-300">Already have an account? <Link href={"/login"}> <a>Login</a> </Link></div>
+              <div className="font-medium text-indigo-400 hover:text-indigo-300">Already have an account? <Link href="/login"> Login</Link></div>
             </div>
           </div>
 

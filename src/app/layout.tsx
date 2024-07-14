@@ -1,10 +1,9 @@
+// src/app/layout.tsx
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { AuroraBackground } from "@/components/Aurorabackground";
-import Layout from "@/components/Layout";
-import Cursor from "@/components/Cursor";
 import { Providers } from "@/components/Providers";
+import Layout from "@/components/Layout";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,22 +14,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        {/* <Cursor /> */}
-        {/* <AuroraBackground> */}
-        
-          <Providers>
-          <Layout>
-          {children}
-          </Layout>
-          </Providers>          
-        
-        {/* </AuroraBackground> */}
+        <Providers>
+          <Layout>{children}</Layout>
+        </Providers>
       </body>
     </html>
   );

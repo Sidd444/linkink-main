@@ -1,10 +1,9 @@
-
 "use client";
 import React, { useState } from "react";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { HoveredLink, Menu, MenuItem, ProductItem } from "./ui/navbar-menu";
 import { cn } from "@/utils/cn";
-import Link from "../../node_modules/next/link";
+import Link from "next/link";
 
 export function NavbarDemo() {
   return (
@@ -16,7 +15,7 @@ export function NavbarDemo() {
 
 function Navbar({ className }: { className?: string }) {
   const [active, setActive] = useState<string | null>(null);
-  const { data: session } = useSession(); 
+  const { data: session } = useSession();
 
   return (
     <div className={cn("fixed top-10 inset-x-2 max-w-2xl mx-auto z-50 mt-2 ", className)}>
@@ -67,7 +66,7 @@ function Navbar({ className }: { className?: string }) {
         <div className="ml-auto flex items-center space-x-4">
           {session ? (
             <>
-              <span>{session.user.name}</span>
+              <span>{session.user?.name}</span>
               <button onClick={() => signOut()} className="text-sm text-blue-500">
                 Logout
               </button>
