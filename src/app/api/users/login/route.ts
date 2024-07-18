@@ -14,6 +14,7 @@ export async function POST(request: NextRequest){
 
         const user = await User.findOne({email})
         console.log("Logged in sucessfully");
+        //console.log(user);
         return NextResponse.redirect(new URL('/', request.url));
         
         if(!user){

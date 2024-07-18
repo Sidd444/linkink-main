@@ -1,48 +1,76 @@
-"use client"
+"use client";
 
-import React, { useState } from 'react';
-import axios from 'axios';
-import Link from 'next/link';
+import Link from "next/link";
+import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import { toast } from "react-hot-toast";
 
-const SignUp = () => {
-  const [fullname, setFullname] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+export default function SignupPage() {
+  const router = useRouter();
+  const [user, setUser] = React.useState({
+    email: "",
+    password: "",
+    username: "",
+  });
+  const [buttonDisabled, setButtonDisabled] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const onSignup = async () => {
     try {
-      await axios.post('api/users/signup', { fullname, email, password });
-      alert("signed up successfully");
-      
-    } catch (error) {
-      setError('Email already in use'+error);
+      setLoading(true);
+      const response = await axios.post("/api/users/signup", user);
+      console.log("Signup success", response.data);
+      router.push("/login");
+    } catch (error: any) {
+      console.log("Signup failed", error.message);
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (
+      user.email.length > 0 &&
+      user.password.length > 0 &&
+      user.username.length > 0
+    ) {
+      setButtonDisabled(false);
+    } else {
+      setButtonDisabled(true);
+    }
+  }, [user]);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-900">
       <div className="w-full max-w-md p-8 space-y-8 bg-gray-800 rounded-lg shadow-lg">
-        <h2 className="text-3xl font-bold text-center text-white">Sign Up</h2>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <h2 className="text-3xl font-bold text-center text-white">
+          {loading ? "Processing" : "Sign Up"}
+        </h2>
+        <form className="mt-8 space-y-6" onSubmit={(e) => e.preventDefault()}>
           <div className="rounded-md shadow-sm">
             <div>
-              <label htmlFor="name" className="sr-only">Name</label>
+              <label htmlFor="username" className="sr-only">
+                Username
+              </label>
               <input
-                id="name"
-                name="name"
+                id="username"
+                name="username"
                 type="text"
                 required
                 className="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Name"
-                value={fullname}
-                onChange={(e) => setFullname(e.target.value)}
+                placeholder="Username"
+                value={user.username}
+                onChange={(e) =>
+                  setUser({ ...user, username: e.target.value })
+                }
               />
             </div>
             <div className="mt-4">
-              <label htmlFor="email" className="sr-only">Email</label>
+              <label htmlFor="email" className="sr-only">
+                Email
+              </label>
               <input
                 id="email"
                 name="email"
@@ -50,12 +78,14 @@ const SignUp = () => {
                 required
                 className="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={user.email}
+                onChange={(e) => setUser({ ...user, email: e.target.value })}
               />
             </div>
             <div className="mt-4">
-              <label htmlFor="password" className="sr-only">Password</label>
+              <label htmlFor="password" className="sr-only">
+                Password
+              </label>
               <input
                 id="password"
                 name="password"
@@ -63,32 +93,35 @@ const SignUp = () => {
                 required
                 className="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={user.password}
+                onChange={(e) => setUser({ ...user, password: e.target.value })}
               />
             </div>
           </div>
 
-          {error && <p className="text-red-500">{error}</p>}
-
           <div className="flex items-center justify-between">
             <div className="text-sm">
-              <div className="font-medium text-indigo-400 hover:text-indigo-300">Already have an account? <Link href="/login"> Login</Link></div>
+              <div className="font-medium text-indigo-400 hover:text-indigo-300">
+                Already have an account?{" "}
+                <Link href="/login"> Login</Link>
+              </div>
             </div>
           </div>
 
           <div>
             <button
-              type="submit"
-              className="relative flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md group hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              type="button"
+              onClick={onSignup}
+              disabled={buttonDisabled}
+              className={`relative flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md group hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
+                buttonDisabled ? "opacity-50 cursor-not-allowed" : ""
+              }`}
             >
-              Sign Up
+              {buttonDisabled ? "No signup" : "Sign Up"}
             </button>
           </div>
         </form>
       </div>
     </div>
   );
-};
-
-export default SignUp;
+}
